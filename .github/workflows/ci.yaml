@@ -18,7 +18,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
       - run: uv sync --dev
       - run: uv run pytest
@@ -34,10 +34,10 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -45,12 +45,12 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=ref,event=branch
-            type=sha,prefix=
+            type=sha,prefix=sha-,format=long
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
@@ -90,12 +90,13 @@ jobs:
           cd $APP_DIR
           
           # Оновлюємо тег образу в новому файлі (використовуємо SHA)
-          sed -i "s|latest|${{ github.sha }}|g" docker-compose.yml
-          # 5. Спроба деплою
+          sed -i "s|latest|sha-${{ github.sha }}|g" docker-compose.yml
+
+          # Спроба деплою
           docker compose pull
           docker compose up -d
 
-          # 6. ПЕРЕВІРКА (Healthcheck)
+          # ПЕРЕВІРКА (Healthcheck)
           sleep 10
           if ! curl -s -f http://localhost:5000/health; then
             echo "Healthcheck failed! Triggering rollback..."
