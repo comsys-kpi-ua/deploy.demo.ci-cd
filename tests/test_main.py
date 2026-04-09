@@ -17,7 +17,7 @@ def client():
 def test_hello_default_version(client):
     response = client.get("/")
     assert response.status_code == 200
-    assert b"App Version: 1.0.0" in response.data
+    assert b"App Version: 1.0.1" in response.data
 
 
 def test_hello_custom_version(client, monkeypatch):
