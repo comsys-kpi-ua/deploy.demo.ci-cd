@@ -62,3 +62,34 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    needs: [build]
+    runs-on: self-hosted
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy Application
+        run: |
+          echo "Starting Deployment of Version ${{ github.sha }}..."
+          docker-compose up -d --build
+          
+      - name: Health Check
+        id: healthcheck
+        run: |
+          echo "Waiting for app to start..."
+          sleep 10
+          # Перевірка статус-коду /health
+          STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:5000/health)
+          if [ $STATUS -ne 200 ]; then
+            echo "Health check failed with status $STATUS"
+            exit 1
+          fi
+          echo "Health check passed!"
+
+      - name: Automatic Rollback
+        if: failure() && steps.healthcheck.outcome == 'failure'
+        run: |
+          echo "CRITICAL: Health check failed. Rolling back to previous version..."
+          docker-compose rollback || docker-compose undo
