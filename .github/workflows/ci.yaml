@@ -74,7 +74,7 @@ jobs:
       - name: Deploy with Safe Backup
         run: |
           # Визначаємо шлях до робочої папки додатка
-          APP_DIR="~/deploy_demo"
+          APP_DIR="/home/ubuntu/deploy_demo"
           mkdir -p $APP_DIR
 
           # РОБИМО БЕКАП старого конфігу, який ЗАРАЗ працює в APP_DIR
