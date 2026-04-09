@@ -73,7 +73,7 @@ jobs:
       - name: Deploy Application
         run: |
           echo "Starting Deployment of Version ${{ github.sha }}..."
-          docker-compose up -d --build
+          docker compose up -d
           
       - name: Health Check
         id: healthcheck
@@ -92,4 +92,4 @@ jobs:
         if: failure() && steps.healthcheck.outcome == 'failure'
         run: |
           echo "CRITICAL: Health check failed. Rolling back to previous version..."
-          docker-compose rollback || docker-compose undo
+          docker compose rollback || docker compose undo
