@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    version = os.getenv("APP_VERSION", "1.0.0")
+    version = os.getenv("APP_VERSION", "1.0.1")
     return f"<h1>Hello! App Version: {version}</h1>"
 
 @app.route('/health')
