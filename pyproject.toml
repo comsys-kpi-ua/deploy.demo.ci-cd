@@ -1,9 +1,27 @@
 [project]
 name = "deploy-demo-ci-cd"
 version = "0.1.0"
-description = "Add your description here"
+description = "Demo project for CI/CD pipeline with Flask application"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "flask>=3.1.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.9.0",
+    "pytest>=8.3.0",
+    "pytest-flask>=1.3.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-flask>=1.3.0",
 ]

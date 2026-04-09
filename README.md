@@ -6,6 +6,22 @@ Demo project for CI/CD pipeline with Flask application.
 
 Simple Flask web application with health check endpoint, demonstrating containerization with Docker and uv.
 
+## Development
+
+```bash
+# Install with dev dependencies
+uv sync --dev
+
+# Run linter
+uv run ruff check .
+
+# Fix automatically
+uv run ruff check --fix .
+
+# Run tests
+uv run pytest
+```
+
 ## Quick Start
 
 ```bash
